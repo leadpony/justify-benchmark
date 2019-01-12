@@ -1,0 +1,8 @@
+The files below are originally authored by json-schema.org.
+- fstab.json
+- fstab.schema.json
+
+The original files can be obtained from:
+https://github.com/json-schema-org/json-schema-org.github.io
+
+The source material is licensed under the AFL or BSD license.
