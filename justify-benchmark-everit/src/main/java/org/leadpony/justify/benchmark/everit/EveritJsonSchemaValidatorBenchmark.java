@@ -13,28 +13,21 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.leadpony.justify.benchmark.justify;
+package org.leadpony.justify.benchmark.everit;
 
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
-import java.io.StringReader;
 import java.nio.charset.StandardCharsets;
-import java.util.ArrayList;
-import java.util.List;
 import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
 
-import javax.json.Json;
-import javax.json.JsonReader;
-import javax.json.JsonReaderFactory;
-import javax.json.JsonValue;
-
-import org.leadpony.justify.api.JsonSchema;
-import org.leadpony.justify.api.JsonValidationService;
-import org.leadpony.justify.api.Problem;
-import org.leadpony.justify.api.ProblemHandler;
+import org.everit.json.schema.Schema;
+import org.everit.json.schema.ValidationException;
+import org.everit.json.schema.loader.SchemaLoader;
+import org.json.JSONObject;
+import org.json.JSONTokener;
 import org.openjdk.jmh.annotations.Benchmark;
 import org.openjdk.jmh.annotations.BenchmarkMode;
 import org.openjdk.jmh.annotations.Mode;
@@ -45,16 +38,13 @@ import org.openjdk.jmh.annotations.Setup;
 import org.openjdk.jmh.annotations.State;
 
 /**
- * Benchmarks for Justify.
+ * Benchmarks for JSON Schema Validator developed by everit.org.
  *
  * @author leadpony
  */
 @BenchmarkMode(Mode.Throughput)
 @OutputTimeUnit(TimeUnit.SECONDS)
-public class JustifyBenchmark {
-
-    private static final JsonReaderFactory readerFactory = Json.createReaderFactory(null);
-    private static final JsonValidationService service = JsonValidationService.newInstance();
+public class EveritJsonSchemaValidatorBenchmark {
 
     @State(Scope.Benchmark)
     public static class ValidationState {
@@ -62,7 +52,7 @@ public class JustifyBenchmark {
         @Param({ "product.json", "product-invalid.json", "fstab.json", "fstab-invalid.json" })
         private String name;
 
-        private JsonSchema schema;
+        private Schema schema;
         private String instance;
         private boolean valid;
 
@@ -78,9 +68,10 @@ public class JustifyBenchmark {
             return tokens[0] + ".schema.json";
         }
 
-        private JsonSchema readSchemaFromResource(String name) throws IOException {
+        private Schema readSchemaFromResource(String name) throws IOException {
             try (InputStream in = getClass().getClassLoader().getResourceAsStream(name)) {
-                return service.readSchema(in);
+                JSONObject object = new JSONObject(new JSONTokener(in));
+                return SchemaLoader.load(object);
             }
         }
 
@@ -92,23 +83,17 @@ public class JustifyBenchmark {
         }
     }
 
-    public JsonValue parseOnly(ValidationState state) throws IOException {
-        JsonValue value = null;
-        try (JsonReader reader = readerFactory.createReader(new StringReader(state.instance))) {
-            value = reader.readValue();
-        }
-        return value;
+    public JSONObject parseOnly(ValidationState state) {
+        return new JSONObject(state.instance);
     }
 
     @Benchmark
-    public JsonValue parseAndValidate(ValidationState state) throws IOException {
-        List<Problem> problems = new ArrayList<>();
-        ProblemHandler handler = problems::addAll;
-        JsonValue value = null;
-        try (JsonReader reader = service.createReader(new StringReader(state.instance), state.schema, handler)) {
-            value = reader.readValue();
-            assert problems.isEmpty() == state.valid;
+    public void parseAndValidate(ValidationState state) {
+        try {
+            state.schema.validate(new JSONObject(state.instance));
+            assert state.valid;
+        } catch (ValidationException  e) {
+            assert !state.valid;
         }
-        return value;
     }
 }

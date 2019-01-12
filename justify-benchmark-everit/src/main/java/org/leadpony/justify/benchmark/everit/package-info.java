@@ -13,9 +13,10 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+
 /**
- * Provides benchmarks for Justify.
+ * Provides benchmarks for everit.org JSON Schema Validator.
  *
  * @author leadpony
  */
-package org.leadpony.justify.benchmark.justify;
+package org.leadpony.justify.benchmark.everit;

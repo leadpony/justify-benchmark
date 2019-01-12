@@ -17,6 +17,7 @@
 
     <modules>
         <module>justify-benchmark-justify</module>
+        <module>justify-benchmark-everit</module>
     </modules>
 
     <dependencyManagement>
