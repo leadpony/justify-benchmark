@@ -51,63 +51,60 @@ import org.openjdk.jmh.annotations.State;
  */
 @BenchmarkMode(Mode.Throughput)
 @OutputTimeUnit(TimeUnit.SECONDS)
+@State(Scope.Benchmark)
 public class JustifyBenchmark {
 
     private static final JsonReaderFactory readerFactory = Json.createReaderFactory(null);
     private static final JsonValidationService service = JsonValidationService.newInstance();
 
-    @State(Scope.Benchmark)
-    public static class ValidationState {
+    @Param({ "product.json", "product-invalid.json", "fstab.json", "fstab-invalid.json" })
+    private String name;
 
-        @Param({ "product.json", "product-invalid.json", "fstab.json", "fstab-invalid.json" })
-        private String name;
+    private JsonSchema schema;
+    private String instance;
+    private boolean valid;
 
-        private JsonSchema schema;
-        private String instance;
-        private boolean valid;
+    @Setup
+    public void setUp() throws IOException {
+        this.schema = readSchemaFromResource(getSchemaNameFor(name));
+        this.instance = readInstanceFromResource(name);
+        this.valid = !name.endsWith("-invalid.json");
+    }
 
-        @Setup
-        public void setUp() throws IOException {
-            this.schema = readSchemaFromResource(getSchemaNameFor(name));
-            this.instance = readInstanceFromResource(name);
-            this.valid = !name.endsWith("-invalid.json");
-        }
+    private static String getSchemaNameFor(String name) {
+        String[] tokens = name.split("\\.|-", 2);
+        return tokens[0] + ".schema.json";
+    }
 
-        private static String getSchemaNameFor(String name) {
-            String[] tokens = name.split("\\.|-", 2);
-            return tokens[0] + ".schema.json";
-        }
-
-        private JsonSchema readSchemaFromResource(String name) throws IOException {
-            try (InputStream in = getClass().getClassLoader().getResourceAsStream(name)) {
-                return service.readSchema(in);
-            }
-        }
-
-        private String readInstanceFromResource(String name) throws IOException {
-            InputStream in = getClass().getClassLoader().getResourceAsStream(name);
-            try (BufferedReader reader = new BufferedReader(new InputStreamReader(in, StandardCharsets.UTF_8))) {
-                return reader.lines().collect(Collectors.joining("\n"));
-            }
+    private JsonSchema readSchemaFromResource(String name) throws IOException {
+        try (InputStream in = getClass().getClassLoader().getResourceAsStream(name)) {
+            return service.readSchema(in);
         }
     }
 
-    public JsonValue parseOnly(ValidationState state) throws IOException {
+    private String readInstanceFromResource(String name) throws IOException {
+        InputStream in = getClass().getClassLoader().getResourceAsStream(name);
+        try (BufferedReader reader = new BufferedReader(new InputStreamReader(in, StandardCharsets.UTF_8))) {
+            return reader.lines().collect(Collectors.joining("\n"));
+        }
+    }
+
+    public JsonValue parseOnly() throws IOException {
         JsonValue value = null;
-        try (JsonReader reader = readerFactory.createReader(new StringReader(state.instance))) {
+        try (JsonReader reader = readerFactory.createReader(new StringReader(this.instance))) {
             value = reader.readValue();
         }
         return value;
     }
 
     @Benchmark
-    public JsonValue parseAndValidate(ValidationState state) throws IOException {
+    public JsonValue parseAndValidate() throws IOException {
         List<Problem> problems = new ArrayList<>();
         ProblemHandler handler = problems::addAll;
         JsonValue value = null;
-        try (JsonReader reader = service.createReader(new StringReader(state.instance), state.schema, handler)) {
+        try (JsonReader reader = service.createReader(new StringReader(this.instance), this.schema, handler)) {
             value = reader.readValue();
-            assert problems.isEmpty() == state.valid;
+            assert problems.isEmpty() == this.valid;
         }
         return value;
     }

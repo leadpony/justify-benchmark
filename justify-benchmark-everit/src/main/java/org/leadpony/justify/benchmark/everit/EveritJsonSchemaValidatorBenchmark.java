@@ -44,57 +44,54 @@ import org.openjdk.jmh.annotations.State;
  */
 @BenchmarkMode(Mode.Throughput)
 @OutputTimeUnit(TimeUnit.SECONDS)
+@State(Scope.Benchmark)
 public class EveritJsonSchemaValidatorBenchmark {
 
-    @State(Scope.Benchmark)
-    public static class ValidationState {
+    @Param({ "product.json", "product-invalid.json", "fstab.json", "fstab-invalid.json" })
+    private String name;
 
-        @Param({ "product.json", "product-invalid.json", "fstab.json", "fstab-invalid.json" })
-        private String name;
+    private Schema schema;
+    private String instance;
+    private boolean valid;
 
-        private Schema schema;
-        private String instance;
-        private boolean valid;
+    @Setup
+    public void setUp() throws IOException {
+        this.schema = readSchemaFromResource(getSchemaNameFor(name));
+        this.instance = readInstanceFromResource(name);
+        this.valid = !name.endsWith("-invalid.json");
+    }
 
-        @Setup
-        public void setUp() throws IOException {
-            this.schema = readSchemaFromResource(getSchemaNameFor(name));
-            this.instance = readInstanceFromResource(name);
-            this.valid = !name.endsWith("-invalid.json");
-        }
+    private static String getSchemaNameFor(String name) {
+        String[] tokens = name.split("\\.|-", 2);
+        return tokens[0] + ".schema.json";
+    }
 
-        private static String getSchemaNameFor(String name) {
-            String[] tokens = name.split("\\.|-", 2);
-            return tokens[0] + ".schema.json";
-        }
-
-        private Schema readSchemaFromResource(String name) throws IOException {
-            try (InputStream in = getClass().getClassLoader().getResourceAsStream(name)) {
-                JSONObject object = new JSONObject(new JSONTokener(in));
-                return SchemaLoader.load(object);
-            }
-        }
-
-        private String readInstanceFromResource(String name) throws IOException {
-            InputStream in = getClass().getClassLoader().getResourceAsStream(name);
-            try (BufferedReader reader = new BufferedReader(new InputStreamReader(in, StandardCharsets.UTF_8))) {
-                return reader.lines().collect(Collectors.joining("\n"));
-            }
+    private Schema readSchemaFromResource(String name) throws IOException {
+        try (InputStream in = getClass().getClassLoader().getResourceAsStream(name)) {
+            JSONObject object = new JSONObject(new JSONTokener(in));
+            return SchemaLoader.load(object);
         }
     }
 
-    public JSONObject parseOnly(ValidationState state) {
-        return new JSONObject(state.instance);
+    private String readInstanceFromResource(String name) throws IOException {
+        InputStream in = getClass().getClassLoader().getResourceAsStream(name);
+        try (BufferedReader reader = new BufferedReader(new InputStreamReader(in, StandardCharsets.UTF_8))) {
+            return reader.lines().collect(Collectors.joining("\n"));
+        }
+    }
+
+    public JSONObject parseOnly() {
+        return new JSONObject(this.instance);
     }
 
     @Benchmark
-    public JSONObject parseAndValidate(ValidationState state) {
-        JSONObject value = new JSONObject(state.instance);
+    public JSONObject parseAndValidate() {
+        JSONObject value = new JSONObject(this.instance);
         try {
-            state.schema.validate(value);
-            assert state.valid;
+            this.schema.validate(value);
+            assert this.valid;
         } catch (ValidationException  e) {
-            assert !state.valid;
+            assert !this.valid;
         }
         return value;
     }

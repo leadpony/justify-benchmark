@@ -16,8 +16,9 @@
     </properties>
 
     <modules>
-        <module>justify-benchmark-justify</module>
+        <module>justify-benchmark-common</module>
         <module>justify-benchmark-everit</module>
+        <module>justify-benchmark-justify</module>
     </modules>
 
     <dependencyManagement>
@@ -34,16 +35,8 @@
             </dependency>
         </dependencies>
     </dependencyManagement>
-    
+
     <build>
-        <resources>
-            <resource>
-                <directory>../</directory>
-                <includes>
-                    <include>*.json</include>
-                </includes>
-            </resource>
-        </resources>
         <pluginManagement>
             <plugins>
                 <plugin>
