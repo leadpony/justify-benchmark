@@ -4,7 +4,7 @@ This project provides benchmarks based on [JMH].
 
 ## How to Build
 
-The following tools are required to build and run the examples.
+The following tools are required to build and run the benchmarks.
 
 * JDK 8 or higher
 * [Apache Maven] 3.6.0 or higher

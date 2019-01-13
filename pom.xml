@@ -36,6 +36,14 @@
     </dependencyManagement>
     
     <build>
+        <resources>
+            <resource>
+                <directory>../</directory>
+                <includes>
+                    <include>*.json</include>
+                </includes>
+            </resource>
+        </resources>
         <pluginManagement>
             <plugins>
                 <plugin>

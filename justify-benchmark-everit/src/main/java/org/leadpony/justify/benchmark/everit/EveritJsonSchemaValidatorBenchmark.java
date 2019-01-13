@@ -88,12 +88,14 @@ public class EveritJsonSchemaValidatorBenchmark {
     }
 
     @Benchmark
-    public void parseAndValidate(ValidationState state) {
+    public JSONObject parseAndValidate(ValidationState state) {
+        JSONObject value = new JSONObject(state.instance);
         try {
-            state.schema.validate(new JSONObject(state.instance));
+            state.schema.validate(value);
             assert state.valid;
         } catch (ValidationException  e) {
             assert !state.valid;
         }
+        return value;
     }
 }
