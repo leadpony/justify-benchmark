@@ -22,8 +22,8 @@
             "description": "Tags for the product",
             "type": "array",
             "items": {
-            "type": "string"
-        },
+                "type": "string"
+            },
             "minItems": 1,
             "uniqueItems": true
         },

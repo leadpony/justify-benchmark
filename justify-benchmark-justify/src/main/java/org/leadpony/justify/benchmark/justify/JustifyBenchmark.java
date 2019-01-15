@@ -57,7 +57,7 @@ public class JustifyBenchmark {
     private static final JsonReaderFactory readerFactory = Json.createReaderFactory(null);
     private static final JsonValidationService service = JsonValidationService.newInstance();
 
-    @Param({ "product.json", "product-invalid.json", "fstab.json", "fstab-invalid.json" })
+    @Param({ "product.json", "product-invalid.json", "fstab.json", "fstab-invalid.json", "countries.json" })
     private String name;
 
     private JsonSchema schema;

@@ -1,0 +1,183 @@
+{
+    "$schema": "http://json-schema.org/draft-07/schema#",
+    "$id": "https://mledoze.github.io/countries.schema.json",
+    "title": "World countries",
+    "description": "World countries in JSON",
+    "type": "array",
+    "items": {
+        "type": "object",
+        "properties": {
+            "name": {
+                "type": "object",
+                "properties": {
+                    "common": {
+                        "description": "common name in english",
+                        "type": "string"
+                    },
+                    "official": {
+                        "description": "official name in english",
+                        "type": "string"
+                    },
+                    "native": {
+                        "description": " list of all native names",
+                        "type": "object",
+                        "patternProperties": {
+                            "[a-z]{3}": {
+                                "$ref": "#/definitions/name"
+                            }
+                        },
+                        "additionalProperties": false
+                    }
+                },
+                "additionalProperties": false
+            },
+            "tld": {
+                "description": "country code top-level domain",
+                "type": "array",
+                "items": {
+                    "type": "string"
+                }
+            },
+            "cca2": {
+                "description": "code ISO 3166-1 alpha-2",
+                "type": "string",
+                "pattern": "[A-Z]{2}"
+            },
+            "ccn3": {
+                "description": "code ISO 3166-1 numeric",
+                "type": "string",
+                "pattern": "\\d{3}|"
+            },
+            "cca3": {
+                "description": "code ISO 3166-1 alpha-3",
+                "type": "string",
+                "pattern": "[A-Z]{3}"
+            },
+            "cioc": {
+                "description": "code International Olympic Committee",
+                "type": "string",
+                "pattern": "[A-Z]{3}|"
+            },
+            "independent": {
+                "description": "ISO 3166-1 independence status",
+                "type": [ "boolean", "null" ]
+            },
+            "status": {
+                "description": "ISO 3166-1 assignment status",
+                "type": "string"
+            },
+            "currency": {
+                "description": "ISO 4217 currency code(s)",
+                "type": "array",
+                "items": {
+                    "type": "string",
+                    "pattern": "[A-Z]{3}"
+                }
+            },
+            "callingCode": {
+                "description": "calling code(s)",
+                "type": "array",
+                "items": {
+                    "type": "string",
+                    "pattern": "\\d+"
+                }
+            },
+            "capital": {
+                "description": "capital city(ies)",
+                "type": "array",
+                "items": {
+                    "type": "string"
+                }
+            },
+            "altSpellings": {
+                "description": "alternative spellings",
+                "type": "array",
+                "items": {
+                    "type": "string"
+                }
+            },
+            "region": {
+                "type": "string"
+            },
+            "subregion": {
+                "type": "string"
+            },
+            "languages": {
+                "description": "list of official language",
+                "type": "object",
+                "patternProperties": {
+                    "[a-z]{3}": {
+                        "type": "string"
+                    }
+                },
+                "additionalProperties": false
+            },
+            "translations": {
+                "description": "list of name translations",
+                "type": "object",
+                "patternProperties": {
+                    "[a-z]{3}": {
+                        "$ref": "#/definitions/name"
+                    }
+                },
+                "additionalProperties": false
+            },
+            "latlng": {
+                "description": "latitude and longitude",
+                "type": "array",
+                "items": [
+                    {
+                        "type": "number",
+                        "minimum": -90,
+                        "maximum": 90
+                    },
+                    {
+                        "type": "number",
+                        "minimum": -180,
+                        "maximum": 180
+                    }
+                ],
+                "additionalItems": false
+            },
+            "demonym": {
+                "description": "name of residents",
+                "type": "string"
+            },
+            "landlocked": {
+                "description": "landlocked status",
+                "type": "boolean"
+            },
+            "borders": {
+                "description": "land borders",
+                "type": "array",
+                "items": {
+                    "type": "string",
+                    "pattern": "[A-Z]{3}"
+                }
+            },
+            "area": {
+                "description": "land area in km^2",
+                "type": "number"
+            },
+            "flag": {
+                "description": "Emoji flag",
+                "type": "string"
+            }
+        },
+        "additionalProperties": false
+    },
+    "definitions": {
+        "name": {
+            "type": "object",
+            "properties": {
+                "common": {
+                    "type": "string"
+                },
+                "official": {
+                    "type": "string"
+                }
+            },
+            "additionalProperties": false
+        }
+    }
+}

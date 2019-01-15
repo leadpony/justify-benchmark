@@ -26,6 +26,7 @@ import java.util.stream.Collectors;
 import org.everit.json.schema.Schema;
 import org.everit.json.schema.ValidationException;
 import org.everit.json.schema.loader.SchemaLoader;
+import org.json.JSONArray;
 import org.json.JSONObject;
 import org.json.JSONTokener;
 import org.openjdk.jmh.annotations.Benchmark;
@@ -45,19 +46,28 @@ import org.openjdk.jmh.annotations.State;
 @BenchmarkMode(Mode.Throughput)
 @OutputTimeUnit(TimeUnit.SECONDS)
 @State(Scope.Benchmark)
-public class EveritJsonSchemaValidatorBenchmark {
+public class EveritJsonSchemaBenchmark {
 
-    @Param({ "product.json", "product-invalid.json", "fstab.json", "fstab-invalid.json" })
+    @Param({ "product.json", "product-invalid.json", "fstab.json", "fstab-invalid.json", "countries.json" })
     private String name;
 
     private Schema schema;
     private String instance;
+    private boolean isArray;
     private boolean valid;
 
     @Setup
     public void setUp() throws IOException {
         this.schema = readSchemaFromResource(getSchemaNameFor(name));
         this.instance = readInstanceFromResource(name);
+        switch (name) {
+        case "countries.json":
+            isArray = true;
+            break;
+        default:
+            isArray = false;
+            break;
+        }
         this.valid = !name.endsWith("-invalid.json");
     }
 
@@ -80,17 +90,17 @@ public class EveritJsonSchemaValidatorBenchmark {
         }
     }
 
-    public JSONObject parseOnly() {
-        return new JSONObject(this.instance);
+    public Object parseOnly() {
+        return this.isArray ? new JSONArray(this.instance) : new JSONObject(this.instance);
     }
 
     @Benchmark
-    public JSONObject parseAndValidate() {
-        JSONObject value = new JSONObject(this.instance);
+    public Object parseAndValidate() {
+        Object value = this.isArray ? new JSONArray(this.instance) : new JSONObject(this.instance);
         try {
             this.schema.validate(value);
             assert this.valid;
-        } catch (ValidationException  e) {
+        } catch (ValidationException e) {
             assert !this.valid;
         }
         return value;
