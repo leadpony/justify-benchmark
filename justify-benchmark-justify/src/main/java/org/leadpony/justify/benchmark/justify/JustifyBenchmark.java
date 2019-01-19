@@ -89,7 +89,7 @@ public class JustifyBenchmark {
         }
     }
 
-    public JsonValue parseOnly() throws IOException {
+    public JsonValue parseOnly() {
         JsonValue value = null;
         try (JsonReader reader = readerFactory.createReader(new StringReader(this.instance))) {
             value = reader.readValue();
@@ -98,7 +98,7 @@ public class JustifyBenchmark {
     }
 
     @Benchmark
-    public JsonValue parseAndValidate() throws IOException {
+    public JsonValue parseAndValidate() {
         List<Problem> problems = new ArrayList<>();
         ProblemHandler handler = problems::addAll;
         JsonValue value = null;
