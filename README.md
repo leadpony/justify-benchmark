@@ -27,9 +27,9 @@ $ ./run-all.sh
 
 ## Benchmark Results
 
-## Justify 0.11.0 - 2019-01-27
+### Justify 0.11.0 - 2019-01-27
 
-```bash
+```
 # Run complete. Total time: 00:41:55
 
 REMEMBER: The numbers below are just data. To gain reusable insights, you need to follow up on
@@ -48,7 +48,7 @@ JustifyBenchmark.parseAndValidate        countries.json  thrpt   25      81.769 
 
 ### Justify 0.10.0 - 2019-01-19
 
-```bash
+```
 # Run complete. Total time: 00:41:55
 
 REMEMBER: The numbers below are just data. To gain reusable insights, you need to follow up on
