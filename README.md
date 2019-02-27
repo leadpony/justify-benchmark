@@ -27,6 +27,25 @@ $ ./run-all.sh
 
 ## Benchmark Results
 
+### Justify 0.13.0 - 2019-02-28
+
+```
+# Run complete. Total time: 00:41:58
+
+REMEMBER: The numbers below are just data. To gain reusable insights, you need to follow up on
+why the numbers are the way they are. Use profilers (see -prof, -lprof), design factorial
+experiments, perform baseline and negative tests that provide experimental control, make sure
+the benchmarking environment is safe on JVM/OS/HW level, ask for reviews from the domain experts.
+Do not assume the numbers tell you what you want them to tell.
+
+Benchmark                                        (name)   Mode  Cnt       Score      Error  Units
+JustifyBenchmark.parseAndValidate          product.json  thrpt   25  143191.831 ± 4376.383  ops/s
+JustifyBenchmark.parseAndValidate  product-invalid.json  thrpt   25  133888.632 ± 2718.851  ops/s
+JustifyBenchmark.parseAndValidate            fstab.json  thrpt   25   18942.186 ±  377.493  ops/s
+JustifyBenchmark.parseAndValidate    fstab-invalid.json  thrpt   25   22478.392 ±  423.481  ops/s
+JustifyBenchmark.parseAndValidate        countries.json  thrpt   25      80.148 ±    0.520  ops/s
+```
+
 ### Justify 0.12.0 - 2019-02-09
 
 ```
