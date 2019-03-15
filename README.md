@@ -27,17 +27,20 @@ $ ./run-all.sh
 
 ## Benchmark Results
 
+### Justify 0.14.0-SNAPSHOT - 2019-03-16
+
+```
+Benchmark                                        (name)   Mode  Cnt       Score      Error  Units
+JustifyBenchmark.parseAndValidate          product.json  thrpt   25  176319.838 ± 2812.802  ops/s
+JustifyBenchmark.parseAndValidate  product-invalid.json  thrpt   25  151570.404 ± 5302.539  ops/s
+JustifyBenchmark.parseAndValidate            fstab.json  thrpt   25   21117.274 ±  402.102  ops/s
+JustifyBenchmark.parseAndValidate    fstab-invalid.json  thrpt   25   23705.672 ±  292.519  ops/s
+JustifyBenchmark.parseAndValidate        countries.json  thrpt   25     105.036 ±    1.136  ops/s
+```
+
 ### Justify 0.13.0 - 2019-02-28
 
 ```
-# Run complete. Total time: 00:41:58
-
-REMEMBER: The numbers below are just data. To gain reusable insights, you need to follow up on
-why the numbers are the way they are. Use profilers (see -prof, -lprof), design factorial
-experiments, perform baseline and negative tests that provide experimental control, make sure
-the benchmarking environment is safe on JVM/OS/HW level, ask for reviews from the domain experts.
-Do not assume the numbers tell you what you want them to tell.
-
 Benchmark                                        (name)   Mode  Cnt       Score      Error  Units
 JustifyBenchmark.parseAndValidate          product.json  thrpt   25  143191.831 ± 4376.383  ops/s
 JustifyBenchmark.parseAndValidate  product-invalid.json  thrpt   25  133888.632 ± 2718.851  ops/s
@@ -49,14 +52,6 @@ JustifyBenchmark.parseAndValidate        countries.json  thrpt   25      80.148 
 ### Justify 0.12.0 - 2019-02-09
 
 ```
-# Run complete. Total time: 00:41:55
-
-REMEMBER: The numbers below are just data. To gain reusable insights, you need to follow up on
-why the numbers are the way they are. Use profilers (see -prof, -lprof), design factorial
-experiments, perform baseline and negative tests that provide experimental control, make sure
-the benchmarking environment is safe on JVM/OS/HW level, ask for reviews from the domain experts.
-Do not assume the numbers tell you what you want them to tell.
-
 Benchmark                                        (name)   Mode  Cnt       Score      Error  Units
 JustifyBenchmark.parseAndValidate          product.json  thrpt   25  117395.923 ± 9984.155  ops/s
 JustifyBenchmark.parseAndValidate  product-invalid.json  thrpt   25  129534.518 ± 3788.073  ops/s
@@ -68,14 +63,6 @@ JustifyBenchmark.parseAndValidate        countries.json  thrpt   25      82.310 
 ### Justify 0.11.0 - 2019-01-27
 
 ```
-# Run complete. Total time: 00:41:55
-
-REMEMBER: The numbers below are just data. To gain reusable insights, you need to follow up on
-why the numbers are the way they are. Use profilers (see -prof, -lprof), design factorial
-experiments, perform baseline and negative tests that provide experimental control, make sure
-the benchmarking environment is safe on JVM/OS/HW level, ask for reviews from the domain experts.
-Do not assume the numbers tell you what you want them to tell.
-
 Benchmark                                        (name)   Mode  Cnt       Score      Error  Units
 JustifyBenchmark.parseAndValidate          product.json  thrpt   25  139406.510 ± 3037.361  ops/s
 JustifyBenchmark.parseAndValidate  product-invalid.json  thrpt   25  136613.763 ± 2140.119  ops/s
@@ -87,14 +74,6 @@ JustifyBenchmark.parseAndValidate        countries.json  thrpt   25      81.769 
 ### Justify 0.10.0 - 2019-01-19
 
 ```
-# Run complete. Total time: 00:41:55
-
-REMEMBER: The numbers below are just data. To gain reusable insights, you need to follow up on
-why the numbers are the way they are. Use profilers (see -prof, -lprof), design factorial
-experiments, perform baseline and negative tests that provide experimental control, make sure
-the benchmarking environment is safe on JVM/OS/HW level, ask for reviews from the domain experts.
-Do not assume the numbers tell you what you want them to tell.
-
 Benchmark                                        (name)   Mode  Cnt       Score      Error  Units
 JustifyBenchmark.parseAndValidate          product.json  thrpt   25  137399.197 ± 2353.472  ops/s
 JustifyBenchmark.parseAndValidate  product-invalid.json  thrpt   25  125964.076 ± 3037.078  ops/s
