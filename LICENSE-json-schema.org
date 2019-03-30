@@ -4,6 +4,7 @@ are originally authored by json-schema.org.
 justify-benchmark-common/src/main/resources/
     fstab.schema.json
     product.schema.json
+    schema.json
 
 The original files can be obtained from:
 https://github.com/json-schema-org/json-schema-org.github.io

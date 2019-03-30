@@ -15,16 +15,12 @@
  */
 package org.leadpony.justify.benchmark.justify;
 
-import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.InputStreamReader;
 import java.io.StringReader;
-import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
-import java.util.stream.Collectors;
 
 import javax.json.Json;
 import javax.json.JsonReader;
@@ -35,6 +31,7 @@ import org.leadpony.justify.api.JsonSchema;
 import org.leadpony.justify.api.JsonValidationService;
 import org.leadpony.justify.api.Problem;
 import org.leadpony.justify.api.ProblemHandler;
+import org.leadpony.justify.benchmark.common.Fixture;
 import org.openjdk.jmh.annotations.Benchmark;
 import org.openjdk.jmh.annotations.BenchmarkMode;
 import org.openjdk.jmh.annotations.Mode;
@@ -57,35 +54,30 @@ public class JustifyBenchmark {
     private static final JsonReaderFactory readerFactory = Json.createReaderFactory(null);
     private static final JsonValidationService service = JsonValidationService.newInstance();
 
-    @Param({ "product.json", "product-invalid.json", "fstab.json", "fstab-invalid.json", "countries.json" })
+    @Param({
+        "product.json",
+        "product-invalid.json",
+        "fstab.json",
+        "fstab-invalid.json",
+        "countries.json",
+        "schema.json"
+        })
     private String name;
 
+    private Fixture fixture;
     private JsonSchema schema;
     private String instance;
-    private boolean valid;
 
     @Setup
     public void setUp() throws IOException {
-        this.schema = readSchemaFromResource(getSchemaNameFor(name));
-        this.instance = readInstanceFromResource(name);
-        this.valid = !name.endsWith("-invalid.json");
+        fixture = Fixture.byName(name);
+        schema = readSchemaFromResource();
+        instance = fixture.getInstanceAsString();
     }
 
-    private static String getSchemaNameFor(String name) {
-        String[] tokens = name.split("\\.|-", 2);
-        return tokens[0] + ".schema.json";
-    }
-
-    private JsonSchema readSchemaFromResource(String name) throws IOException {
-        try (InputStream in = getClass().getClassLoader().getResourceAsStream(name)) {
+    private JsonSchema readSchemaFromResource() throws IOException {
+        try (InputStream in = fixture.openSchemaStream()) {
             return service.readSchema(in);
-        }
-    }
-
-    private String readInstanceFromResource(String name) throws IOException {
-        InputStream in = getClass().getClassLoader().getResourceAsStream(name);
-        try (BufferedReader reader = new BufferedReader(new InputStreamReader(in, StandardCharsets.UTF_8))) {
-            return reader.lines().collect(Collectors.joining("\n"));
         }
     }
 
@@ -104,7 +96,7 @@ public class JustifyBenchmark {
         JsonValue value = null;
         try (JsonReader reader = service.createReader(new StringReader(this.instance), this.schema, handler)) {
             value = reader.readValue();
-            assert problems.isEmpty() == this.valid;
+            assert problems.isEmpty() == fixture.isValid();
         }
         return value;
     }
