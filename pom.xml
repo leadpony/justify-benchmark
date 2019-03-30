@@ -7,6 +7,8 @@
     <artifactId>justify-benchmark</artifactId>
     <version>0.15.0-SNAPSHOT</version>
     <packaging>pom</packaging>
+    
+    <name>Justify Benchmark</name>
 
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
@@ -19,6 +21,7 @@
         <module>justify-benchmark-common</module>
         <module>justify-benchmark-everit</module>
         <module>justify-benchmark-justify</module>
+        <module>justify-benchmark-medeia</module>
     </modules>
 
     <dependencyManagement>

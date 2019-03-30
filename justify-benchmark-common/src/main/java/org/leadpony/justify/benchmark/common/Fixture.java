@@ -35,8 +35,7 @@ public enum Fixture {
     FSTAB_INVALID("fstab-invalid.json", "fstab.schema.json", false),
     PRODUCT("product.json", "product.schema.json", true),
     PRODUCT_INVALID("product-invalid.json", "product.schema.json", false),
-    SCHEMA("schema.json", "schema.json", true)
-    ;
+    SCHEMA("schema.json", "schema.json", true);
 
     private final String name;
     private final String schemaName;
@@ -56,10 +55,20 @@ public enum Fixture {
         this.valid = valid;
     }
 
+    /**
+     * Returns whether the instance is valid or not.
+     *
+     * @return {@code true} if the instance is valid, {@code false} if not valid.
+     */
     public boolean isValid() {
         return valid;
     }
 
+    /**
+     * Returns whether the instance is an array or not.
+     *
+     * @return {@code true} if the instance is an array, {@code false} otherwise.
+     */
     public boolean isArray() {
         switch (this) {
         case COUNTRIES:
@@ -69,6 +78,11 @@ public enum Fixture {
         }
     }
 
+    /**
+     * Returns the instance as a string.
+     *
+     * @return the instance as a string.
+     */
     public String getInstanceAsString() {
         try (BufferedReader reader = new BufferedReader(
                 new InputStreamReader(getResourceAsStream(name), StandardCharsets.UTF_8))) {
@@ -78,15 +92,26 @@ public enum Fixture {
         }
     }
 
+    /**
+     * Returns the schema as a stream.
+     *
+     * @return the schema as a stream.
+     */
     public InputStream openSchemaStream() {
         return getResourceAsStream(schemaName);
     }
 
+    /**
+     * Looks up the fixture by the instance name.
+     *
+     * @param name the name of the instance.
+     * @return the fixture found, or {@code null} if not found.
+     */
     public static Fixture byName(String name) {
         return fixtures.get(name);
     }
 
-   private InputStream getResourceAsStream(String name) {
+    private InputStream getResourceAsStream(String name) {
         return getClass().getClassLoader().getResourceAsStream(name);
     }
 }

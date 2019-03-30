@@ -14,7 +14,7 @@
     <artifactId>justify-benchmark-everit</artifactId>
     <packaging>jar</packaging>
 
-    <name>JSON Schema Validator (everit.org) Benchmark</name>
+    <name>Everit JSON Schema Benchmark</name>
 
     <dependencies>
         <dependency>
