@@ -27,15 +27,16 @@ $ ./run-all.sh
 
 ## Benchmark Results
 
-### Justify 0.15.0-SNAPSHOT - 2019-03-30
+### Justify 0.15.0 - 2019-03-31
 
 ```
-Benchmark                                        (name)   Mode  Cnt       Score      Error  Units
-JustifyBenchmark.parseAndValidate          product.json  thrpt   25  173781.305 ± 3918.726  ops/s
-JustifyBenchmark.parseAndValidate  product-invalid.json  thrpt   25  152951.641 ± 1092.811  ops/s
-JustifyBenchmark.parseAndValidate            fstab.json  thrpt   25   20284.380 ±  256.720  ops/s
-JustifyBenchmark.parseAndValidate    fstab-invalid.json  thrpt   25   24359.228 ±  221.039  ops/s
-JustifyBenchmark.parseAndValidate        countries.json  thrpt   25     105.037 ±    1.255  ops/s
+Benchmark                                        (name)   Mode  Cnt       Score       Error  Units
+JustifyBenchmark.parseAndValidate          product.json  thrpt   25  188591.910 ±  2931.478  ops/s
+JustifyBenchmark.parseAndValidate  product-invalid.json  thrpt   25  151639.353 ± 14021.231  ops/s
+JustifyBenchmark.parseAndValidate            fstab.json  thrpt   25   18883.871 ±  3086.774  ops/s
+JustifyBenchmark.parseAndValidate    fstab-invalid.json  thrpt   25   23583.374 ±   257.587  ops/s
+JustifyBenchmark.parseAndValidate        countries.json  thrpt   25     106.983 ±     3.648  ops/s
+JustifyBenchmark.parseAndValidate           schema.json  thrpt   25   11686.598 ±    97.262  ops/s
 ```
 
 ### Justify 0.14.0 - 2019-03-17
