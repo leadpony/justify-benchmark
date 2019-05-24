@@ -18,7 +18,7 @@ package org.leadpony.justify.benchmark.medeia;
 import java.io.IOException;
 import java.util.concurrent.TimeUnit;
 
-import org.leadpony.justify.benchmark.common.Fixture;
+import org.leadpony.justify.benchmark.common.JsonResource;
 import org.openjdk.jmh.annotations.Benchmark;
 import org.openjdk.jmh.annotations.BenchmarkMode;
 import org.openjdk.jmh.annotations.Mode;
@@ -45,19 +45,18 @@ import com.worldturner.medeia.schema.validation.SchemaValidator;
 @BenchmarkMode(Mode.Throughput)
 @OutputTimeUnit(TimeUnit.SECONDS)
 @State(Scope.Benchmark)
-public class MedeiaValidatorBenchmark {
+public class ValidatorBenchmark {
 
     @Param({
-        "product.json",
-        "product-invalid.json",
-        "fstab.json",
-        "fstab-invalid.json",
-        "countries.json",
-        "schema.json"
+        "PRODUCT",
+        "PRODUCT_INVALID",
+        "FSTAB",
+        "FSTAB_INVALID",
+        "COUNTRIES",
+        "SCHEMA"
         })
-    private String name;
+    private JsonResource resource;
 
-    private Fixture fixture;
     private SchemaValidator schema;
     private String instance;
 
@@ -68,24 +67,23 @@ public class MedeiaValidatorBenchmark {
 
     @Setup
     public void setUp() throws IOException {
-        fixture = Fixture.byName(name);
         schema = readSchemaFromResource();
-        instance = fixture.getInstanceAsString();
+        instance = resource.getInstanceAsString();
     }
 
     private SchemaValidator readSchemaFromResource() throws IOException {
-        return api.loadSchema(new StreamSchemaSource(fixture.openSchemaStream()));
+        return api.loadSchema(new StreamSchemaSource(resource.openSchemaStream()));
     }
 
     @Benchmark
-    public JsonNode parseAndValidate() {
+    public JsonNode validate() {
         JsonNode root = null;
         try (JsonParser originalParser = factory.createParser(this.instance);
              JsonParser parser = api.decorateJsonParser(schema, originalParser)) {
             root = mapper.readTree(parser);
-            assert fixture.isValid();
+            assert resource.isValid();
         } catch (ValidationFailedException e) {
-            assert !fixture.isValid();
+            assert !resource.isValid();
         } catch (IOException e) {
         }
         return root;

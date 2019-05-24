@@ -20,16 +20,14 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.nio.charset.StandardCharsets;
-import java.util.HashMap;
-import java.util.Map;
 import java.util.stream.Collectors;
 
 /**
- * The defined fixtures.
+ * JSON resources.
  *
  * @author leadpony
  */
-public enum Fixture {
+public enum JsonResource {
     COUNTRIES("countries.json", "countries.schema.json", true),
     FSTAB("fstab.json", "fstab.schema.json", true),
     FSTAB_INVALID("fstab-invalid.json", "fstab.schema.json", false),
@@ -41,15 +39,7 @@ public enum Fixture {
     private final String schemaName;
     private final boolean valid;
 
-    private static final Map<String, Fixture> fixtures = new HashMap<>();
-
-    static {
-        for (Fixture fixture : values()) {
-            fixtures.put(fixture.name, fixture);
-        }
-    }
-
-    private Fixture(String name, String schemaName, boolean valid) {
+    JsonResource(String name, String schemaName, boolean valid) {
         this.name = name;
         this.schemaName = schemaName;
         this.valid = valid;
@@ -85,11 +75,20 @@ public enum Fixture {
      */
     public String getInstanceAsString() {
         try (BufferedReader reader = new BufferedReader(
-                new InputStreamReader(getResourceAsStream(name), StandardCharsets.UTF_8))) {
+                new InputStreamReader(openInstanceStream(), StandardCharsets.UTF_8))) {
             return reader.lines().collect(Collectors.joining("\n"));
         } catch (IOException e) {
             return null;
         }
+    }
+
+    /**
+     * Returns the instance as a stream.
+     *
+     * @return the instance as a stream.
+     */
+    public InputStream openInstanceStream() {
+        return getResourceAsStream(name);
     }
 
     /**
@@ -99,16 +98,6 @@ public enum Fixture {
      */
     public InputStream openSchemaStream() {
         return getResourceAsStream(schemaName);
-    }
-
-    /**
-     * Looks up the fixture by the instance name.
-     *
-     * @param name the name of the instance.
-     * @return the fixture found, or {@code null} if not found.
-     */
-    public static Fixture byName(String name) {
-        return fixtures.get(name);
     }
 
     private InputStream getResourceAsStream(String name) {

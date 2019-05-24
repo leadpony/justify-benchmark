@@ -5,7 +5,7 @@
 
     <groupId>org.leadpony.justify</groupId>
     <artifactId>justify-benchmark</artifactId>
-    <version>0.16.0-SNAPSHOT</version>
+    <version>0.17.0-SNAPSHOT</version>
     <packaging>pom</packaging>
 
     <name>Justify Benchmark</name>

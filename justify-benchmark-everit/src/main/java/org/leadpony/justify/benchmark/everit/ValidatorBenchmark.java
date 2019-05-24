@@ -25,7 +25,7 @@ import org.everit.json.schema.loader.SchemaLoader;
 import org.json.JSONArray;
 import org.json.JSONObject;
 import org.json.JSONTokener;
-import org.leadpony.justify.benchmark.common.Fixture;
+import org.leadpony.justify.benchmark.common.JsonResource;
 import org.openjdk.jmh.annotations.Benchmark;
 import org.openjdk.jmh.annotations.BenchmarkMode;
 import org.openjdk.jmh.annotations.Mode;
@@ -43,50 +43,44 @@ import org.openjdk.jmh.annotations.State;
 @BenchmarkMode(Mode.Throughput)
 @OutputTimeUnit(TimeUnit.SECONDS)
 @State(Scope.Benchmark)
-public class EveritJsonSchemaBenchmark {
+public class ValidatorBenchmark {
 
     @Param({
-        "product.json",
-        "product-invalid.json",
-        "fstab.json",
-        "fstab-invalid.json",
-        "countries.json",
-        "schema.json"
+        "PRODUCT",
+        "PRODUCT_INVALID",
+        "FSTAB",
+        "FSTAB_INVALID",
+        "COUNTRIES",
+        "SCHEMA"
         })
-    private String name;
+    private JsonResource resource;
 
-    private Fixture fixture;
     private Schema schema;
     private String instance;
     private boolean isArray;
 
     @Setup
     public void setUp() throws IOException {
-        fixture = Fixture.byName(name);
         schema = readSchemaFromResource();
-        instance = fixture.getInstanceAsString();
-        isArray = fixture.isArray();
+        instance = resource.getInstanceAsString();
+        isArray = resource.isArray();
     }
 
     private Schema readSchemaFromResource() throws IOException {
-        try (InputStream in = fixture.openSchemaStream()) {
+        try (InputStream in = resource.openSchemaStream()) {
             JSONObject object = new JSONObject(new JSONTokener(in));
             return SchemaLoader.load(object);
         }
     }
 
-    public Object parseOnly() {
-        return isArray ? new JSONArray(this.instance) : new JSONObject(this.instance);
-    }
-
     @Benchmark
-    public Object parseAndValidate() {
+    public Object validate() {
         Object value = isArray ? new JSONArray(this.instance) : new JSONObject(this.instance);
         try {
             this.schema.validate(value);
-            assert fixture.isValid();
+            assert resource.isValid();
         } catch (ValidationException e) {
-            assert !fixture.isValid();
+            assert !resource.isValid();
         }
         return value;
     }

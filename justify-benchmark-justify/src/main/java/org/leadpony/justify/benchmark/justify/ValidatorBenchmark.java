@@ -22,16 +22,14 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 
-import javax.json.Json;
 import javax.json.JsonReader;
-import javax.json.JsonReaderFactory;
 import javax.json.JsonValue;
 
 import org.leadpony.justify.api.JsonSchema;
 import org.leadpony.justify.api.JsonValidationService;
 import org.leadpony.justify.api.Problem;
 import org.leadpony.justify.api.ProblemHandler;
-import org.leadpony.justify.benchmark.common.Fixture;
+import org.leadpony.justify.benchmark.common.JsonResource;
 import org.openjdk.jmh.annotations.Benchmark;
 import org.openjdk.jmh.annotations.BenchmarkMode;
 import org.openjdk.jmh.annotations.Mode;
@@ -49,55 +47,44 @@ import org.openjdk.jmh.annotations.State;
 @BenchmarkMode(Mode.Throughput)
 @OutputTimeUnit(TimeUnit.SECONDS)
 @State(Scope.Benchmark)
-public class JustifyBenchmark {
+public class ValidatorBenchmark {
 
-    private static final JsonReaderFactory readerFactory = Json.createReaderFactory(null);
     private static final JsonValidationService service = JsonValidationService.newInstance();
 
     @Param({
-        "product.json",
-        "product-invalid.json",
-        "fstab.json",
-        "fstab-invalid.json",
-        "countries.json",
-        "schema.json"
+        "PRODUCT",
+        "PRODUCT_INVALID",
+        "FSTAB",
+        "FSTAB_INVALID",
+        "COUNTRIES",
+        "SCHEMA"
         })
-    private String name;
+    private JsonResource resource;
 
-    private Fixture fixture;
     private JsonSchema schema;
     private String instance;
 
     @Setup
     public void setUp() throws IOException {
-        fixture = Fixture.byName(name);
         schema = readSchemaFromResource();
-        instance = fixture.getInstanceAsString();
+        instance = resource.getInstanceAsString();
     }
 
     private JsonSchema readSchemaFromResource() throws IOException {
-        try (InputStream in = fixture.openSchemaStream()) {
+        try (InputStream in = resource.openSchemaStream()) {
             return service.readSchema(in);
         }
     }
 
-    public JsonValue parseOnly() {
-        JsonValue value = null;
-        try (JsonReader reader = readerFactory.createReader(new StringReader(this.instance))) {
-            value = reader.readValue();
-        }
-        return value;
-    }
-
     @Benchmark
-    public JsonValue parseAndValidate() {
+    public JsonValue validate() {
+        JsonValue value = null;
         List<Problem> problems = new ArrayList<>();
         ProblemHandler handler = problems::addAll;
-        JsonValue value = null;
         try (JsonReader reader = service.createReader(new StringReader(this.instance), this.schema, handler)) {
             value = reader.readValue();
-            assert problems.isEmpty() == fixture.isValid();
         }
+        assert problems.isEmpty() == resource.isValid();
         return value;
     }
 }
